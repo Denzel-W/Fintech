@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -485,7 +486,7 @@
     <button class="fab" onclick="abrirModalTransacao()"><i data-lucide="plus"></i></button>
 </div>
 
-<!-- MODAL CONFIRMAÇÃO (CORRIGIDO CLIQUE FORA) -->
+<!-- MODAL CONFIRMAÇÃO -->
 <div id="modal-confirm" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
     <div class="modal-box" style="text-align: center;">
         <div style="display:flex; justify-content:center; color:var(--warning); margin-bottom:15px;"><i data-lucide="alert-triangle" style="width:48px; height:48px;"></i></div>
@@ -871,7 +872,16 @@
         if (isCartao && !isInv && !isReceita) {
             boxCartao.style.display = 'block';
             let selectCartao = document.getElementById('qual-cartao');
+            
+            // CORREÇÃO: Salva o cartão atual antes de recriar as opções no HTML
+            let valorAtual = selectCartao.value; 
+            
             selectCartao.innerHTML = cartoes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            
+            // Restaura o cartão selecionado
+            if (valorAtual && cartoes.some(c => c.id === valorAtual)) {
+                selectCartao.value = valorAtual; 
+            }
         } else {
             boxCartao.style.display = 'none';
         }
@@ -1002,6 +1012,9 @@
         document.getElementById('modal-titulo').innerHTML = id ? `<i data-lucide="pencil"></i> Editar Registro` : `<i data-lucide="plus-circle"></i> Novo Lançamento`; 
         document.getElementById('edit-id').value = id || "";
         
+        // CORREÇÃO: Chama verificarCampos ANTES para popular os selects, e depois insere os dados da edição
+        verificarCampos(); 
+        
         if(id) {
             const i = dados.find(x => x.id == id);
             document.getElementById('desc').value = i.desc; 
@@ -1011,12 +1024,15 @@
             document.getElementById('data-lancamento').value = i.dataReal; 
             document.getElementById('tipo-lancamento').value = 'unica'; 
             document.getElementById('tipo-lancamento').disabled = true; 
+            
             document.getElementById('forma-pagamento').value = i.formaPgto || 'conta'; 
             document.getElementById('forma-pagamento').disabled = true; 
             document.getElementById('meta-destino').value = i.meta || '';
             
+            verificarCampos(); // Atualiza visibilidade após setar a forma de pagamento
+            
             if(i.cartaoId) { 
-                document.getElementById('qual-cartao').innerHTML = `<option value="${i.cartaoId}">${(cartoes.find(c => c.id === i.cartaoId)||{}).nome || 'Cartão'}</option>`; 
+                document.getElementById('qual-cartao').value = i.cartaoId; 
             }
         } else {
             document.getElementById('desc').value = ''; 
@@ -1027,8 +1043,9 @@
             document.getElementById('tipo-lancamento').value = 'unica'; 
             document.getElementById('forma-pagamento').disabled = false; 
             document.getElementById('forma-pagamento').value = 'conta';
+            verificarCampos();
         }
-        verificarCampos(); 
+        
         m.style.display = 'flex'; 
         refreshIcons();
     }
@@ -1063,7 +1080,7 @@
         let itensFatura = dados.filter(t => t.mesIso <= mI && t.formaPgto === 'cartao' && t.cartaoId === cartaoId && !t.pago);
         let itensMesPagos = dados.filter(t => t.mesIso === mI && t.formaPgto === 'cartao' && t.cartaoId === cartaoId && t.pago);
         
-        let lista = [...itensFatura, ...itensMesPagos];
+        let lista =[...itensFatura, ...itensMesPagos];
         lista.sort((a, b) => new Date(b.dataReal) - new Date(a.dataReal));
         
         let total = itensFatura.reduce((acc, t) => acc + t.valor, 0);
@@ -1267,7 +1284,7 @@
             
             if (isToday && isFds) {
                 mH = "Fim de semana";
-            } else if (isToday && (sP + sR) === 0) {
+            } else if (isToday && (sP+sR) === 0) {
                 mH = "Sem depósitos";
             }
             
@@ -1396,7 +1413,7 @@
         let ms = an * 12; 
         let cM = Math.pow(1 + txAnual, 1/12) - 1; 
         let lbl = []; 
-        let dBo = []; 
+        let dBo =[]; 
         let dTo =[]; 
         let tB = 0; 
         let tR = 0;
@@ -1822,6 +1839,14 @@
 
         updateCharts(nM, dM, iM, gD, diasNoMes);
         refreshIcons();
+    }
+
+    // BLOQUEIA O SWIPE NO CARROSSEL DE CARTÕES PARA NÃO MUDAR DE ABA
+    const carouselFaturas = document.getElementById('carousel-faturas');
+    if (carouselFaturas) {
+        carouselFaturas.addEventListener('touchstart', e => e.stopPropagation(), {passive: true});
+        carouselFaturas.addEventListener('touchmove', e => e.stopPropagation(), {passive: true});
+        carouselFaturas.addEventListener('touchend', e => e.stopPropagation(), {passive: true});
     }
 
     const viewsList = ['resumo', 'transacoes', 'graficos', 'simulador'];
