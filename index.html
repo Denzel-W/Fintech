@@ -224,8 +224,8 @@
         .island-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 15px; }
         .island-label { display: block; font-size: 0.7rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
 
-        /* Ajuste do botão Chip para caber em telas menores sem estourar o modal */
-        .chip-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 10px 5px; border-radius: 10px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-family: 'Inter', sans-serif; text-overflow: ellipsis; overflow: hidden; }
+        /* Ajuste fino das TAGS (Bug "Mensal" estourando corrigido) */
+        .chip-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 2px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-family: 'Inter', sans-serif; text-overflow: ellipsis; overflow: hidden; }
         .chip-btn:hover { background: rgba(255,255,255,0.02); }
         .chip-btn.active { background: var(--bg-card); border-color: var(--text-light); color: var(--text-light); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
@@ -426,13 +426,13 @@
 <!-- =========================================
      MODAL DE CONFIRMAÇÃO DE SAÍDA (History Trap)
      ========================================= -->
-<div id="modal-exit" class="modal-bg" onclick="if(event.target === this) window.history.back()">
+<div id="modal-exit" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
     <div class="modal-box" style="text-align: center; border-color: rgba(248, 113, 113, 0.4);">
         <h3 style="font-family:'Inter', sans-serif; font-size:1.4rem; margin-bottom:10px; color:var(--text-light);"><i data-lucide="log-out" style="color:var(--danger); margin-right:5px;"></i> Sair</h3>
         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px; line-height:1.4;">Tem certeza que deseja encerrar o aplicativo?</p>
         <div style="display: flex; gap: 10px;">
-            <button class="quick-btn" onclick="window.history.back()" style="flex:1; justify-content:center;">Não</button>
-            <button class="btn-pay-fatura" onclick="history.go(-2)" style="flex:1; justify-content:center; background:var(--danger); color:white;">Sim, sair</button>
+            <button class="quick-btn" onclick="document.getElementById('modal-exit').style.display='none'" style="flex:1; justify-content:center;">Não</button>
+            <button class="btn-pay-fatura" onclick="fecharApp()" style="flex:1; justify-content:center; background:var(--danger); color:white;">Sim, sair</button>
         </div>
     </div>
 </div>
@@ -719,27 +719,36 @@
     // SISTEMA DE NAVEGAÇÃO / HISTORY TRAP
     // ==========================================
     
-    function setupHistoryTrap() {
-        if (!history.state || !history.state.base) {
-            history.replaceState({ backTrap: true }, '', ''); // A armadilha
-            history.pushState({ base: true }, '', '');        // Tela inicial verdadeira
-        }
+    let trapArmada = false;
+    let saindoDoApp = false;
+
+    function armarTrap() {
+        if (trapArmada) return;
+        history.replaceState({ backTrap: true }, '', '');
+        history.pushState({ base: true }, '', '');
+        trapArmada = true;
     }
 
+    // Interceptamos o PRIMEIRO toque na tela para armar a armadilha de volta de forma legítima
+    document.addEventListener('click', armarTrap, { once: true });
+    document.addEventListener('touchstart', armarTrap, { once: true });
+
     window.addEventListener('popstate', (e) => {
-        // 1. Se o usuário cair na armadilha (tentou voltar para sair da tela inicial)
+        if (saindoDoApp) return;
+
+        // 1. Caiu na armadilha: O usuário apertou voltar na tela principal
         if (e.state && e.state.backTrap) {
-            history.pushState({ base: true }, '', ''); // Empurra a base de novo pra não fechar o navegador
-            document.getElementById('modal-exit').style.display = 'flex'; // Exibe a confirmação
+            history.pushState({ base: true }, '', ''); // Re-insere a base pra não fechar o app real
+            document.getElementById('modal-exit').style.display = 'flex'; // Exibe modal de saída
             return;
         }
 
-        // 2. Esconde todos os modais normais sempre que o estado muda
+        // 2. Comportamento padrão: esconde TODOS os modais normais
         document.querySelectorAll('.modal-bg').forEach(m => {
             if(m.id !== 'modal-exit') m.style.display = 'none';
         });
 
-        // 3. Se havia um modal específico no histórico para frente ou pra trás, mostra ele
+        // 3. Mostra só o modal do estado atual (se houver)
         if (e.state && e.state.modalId) {
             let m = document.getElementById(e.state.modalId);
             if (m) m.style.display = 'flex';
@@ -747,12 +756,23 @@
     });
 
     function openModal(id) {
-        // Esconde visulamente outros modais para manter a hierarquia limpa
         document.querySelectorAll('.modal-bg').forEach(m => {
             if(m.id !== 'modal-exit') m.style.display = 'none';
         });
         document.getElementById(id).style.display = 'flex';
         history.pushState({ modalId: id }, '', `#${id}`);
+    }
+
+    function fecharApp() {
+        saindoDoApp = true;
+        document.getElementById('modal-exit').style.display = 'none';
+        // Volta pro BackTrap
+        window.history.back();
+        // Dispara logo em seguida outra volta para sair do app/página de verdade
+        setTimeout(() => {
+            window.history.back();
+            window.close(); // Fallback se tiver permissão
+        }, 150);
     }
 
     // ==========================================
@@ -930,7 +950,7 @@
             }
         }
         
-        // Esconde a dica de parcela quando for edição para não confundir o usuário (Bug 1.2 Fixed)
+        // Esconde a dica de parcela quando for edição para não confundir
         let isEditando = document.getElementById('edit-id').value !== "";
         document.getElementById('dica-parcela').style.display = (tipo === 'parcelada' && !isEditando) ? 'block' : 'none';
         inputParcelas.style.display = (tipo === 'parcelada' && !isEditando) ? 'block' : 'none'; 
@@ -1008,7 +1028,7 @@
         if (!desc && cat === 'Investimentos') { let m = metas.find(x => x.id === mDest); desc = m ? `Aporte: ${m.nome}` : 'Investimento'; }
         if (!desc || isNaN(val) || !dat) return alert("Preencha Valor, Data e Descrição!");
         
-        const [a, m, d] = dat.split('-'); 
+        const[a, m, d] = dat.split('-'); 
         
         let aplicarEdicao = (aplicarEmTodas = false) => {
             let cleanDesc = desc.replace(/\s*\(\d+\/\d+\)$/, '').trim(); 
@@ -1023,7 +1043,7 @@
                             let newDesc = cleanDesc;
                             if (x.parcelasTotal > 1) { newDesc = `${cleanDesc} (${x.parcelaNum}/${x.parcelasTotal})`; }
                             x.desc = newDesc; x.subcat = subcat; x.cat = cat; x.meta = mDest; x.formaPgto = forma;
-                            x.pago = (forma === 'conta'); // Correção do Bug 1.1
+                            x.pago = (forma === 'conta'); // Correção Fatura Fantasma
                             x.valor = val;
                             if(forma === 'cartao') x.cartaoId = idCartaoDestino; else delete x.cartaoId;
                         }
@@ -1032,7 +1052,7 @@
                 } else {
                     let idx = dados.findIndex(x => x.id == eId); 
                     dados[idx].desc = desc; dados[idx].subcat = subcat; dados[idx].valor = val; dados[idx].cat = cat; dados[idx].dataReal = dat; dados[idx].mesIso = dat.substring(0,7); dados[idx].dia = dBase.getDate(); dados[idx].meta = mDest; dados[idx].formaPgto = forma; 
-                    dados[idx].pago = (forma === 'conta'); // Correção do Bug 1.1
+                    dados[idx].pago = (forma === 'conta'); // Correção Fatura Fantasma
                     if(forma === 'cartao') dados[idx].cartaoId = idCartaoDestino; else delete dados[idx].cartaoId;
                 }
             } else {
@@ -1047,7 +1067,7 @@
                     
                     let dI = formatarDataISO(dataParcela);
                     let descF = tipo === 'parcelada' ? `${cleanDesc} (${i + 1}/${p})` : desc;
-                    let valFinal = tipo === 'parcelada' ? Math.round((val/p) * 100) / 100 : val; // Bug Centavos Fixed
+                    let valFinal = tipo === 'parcelada' ? Math.round((val/p) * 100) / 100 : val; // Dízima Fix
                     
                     dados.push({ id: baseId + i, groupId: groupId, parcelaNum: i+1, parcelasTotal: p, desc: descF, subcat: subcat, valor: valFinal, cat: cat, meta: mDest, mesIso: dI.substring(0,7), dataReal: dI, dia: dataParcela.getDate(), formaPgto: forma, cartaoId: idCartaoDestino, pago: pago });
                 }
@@ -1057,7 +1077,7 @@
             if (manterAberto) { 
                 document.getElementById('desc').value = ''; document.getElementById('valor').value = ''; document.getElementById('subcat').value = ''; document.getElementById('tag-detectada').style.display = 'none'; document.getElementById('edit-id').value = ''; document.getElementById('desc').focus();
             } else { 
-                window.history.back(); // Retorna fechando o modal transação
+                window.history.back(); // Volta pra fechar modal transação nativamente
                 if(document.getElementById('modal-fatura-cartao').style.display === 'flex') { renderFaturaCartao(); } 
             }
         };
@@ -1111,7 +1131,7 @@
     }
 
     window.executarExclusao = function(id, groupId) {
-        window.history.back(); // Fecha o confirm
+        window.history.back(); 
         if (groupId) {
             dados = dados.filter(x => x.groupId !== groupId);
             showToast('Todas as parcelas foram excluídas!', 'trash-2', 'var(--danger)');
@@ -1199,7 +1219,7 @@
                 let imp = JSON.parse(e.target.result); 
                 if(!imp || !Array.isArray(imp.dados) || !Array.isArray(imp.metas)) throw new Error("Estrutura inválida"); 
                 dados = imp.dados; metas = imp.metas; if(imp.teto) tetoGastos = imp.teto; if(imp.cartoes) cartoes = imp.cartoes; 
-                salvarStorageTransacoes(); showToast('Restaurado!'); window.history.back();
+                salvarStorageTransacoes(); showToast('Restaurado!'); 
             } catch (err) { alert("Arquivo inválido."); } 
         }; reader.readAsText(file); 
     }
@@ -1410,9 +1430,8 @@
     contentArea.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
     contentArea.addEventListener('touchend', e => { let touchEndX = e.changedTouches[0].screenX; let touchEndY = e.changedTouches[0].screenY; let deltaX = touchEndX - touchStartX; let deltaY = touchEndY - touchStartY; if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) { let currentActive = document.querySelector('.view.active'); if(!currentActive) return; let currentId = currentActive.id.replace('view-', ''); let currentIndex = viewsList.indexOf(currentId); let nextIndex = currentIndex; if (deltaX < 0 && currentIndex < viewsList.length - 1) { nextIndex++; } else if (deltaX > 0 && currentIndex > 0) { nextIndex--; } if (nextIndex !== currentIndex) { let nextTab = document.querySelectorAll('.nav-tabs .tab')[nextIndex]; mudarAba(viewsList[nextIndex], nextTab); } } }, {passive: true});
 
-    setupHistoryTrap(); // Inicia a armadilha do botão Voltar
+    atualizarSimulador(); 
     render();
-    atualizarSimulador(); // Inicia simulador para não ficar zerado (Bug 4.2)
 </script>
 </body>
 </html>
