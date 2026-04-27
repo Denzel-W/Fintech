@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -120,7 +118,7 @@
         .btn-pay-fatura:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .btn-pay-fatura:active { transform: scale(0.95); }
 
-        /* BOTÃO IA (Importado da Estante) */
+        /* BOTÃO IA */
         .btn-ai { background: rgba(45, 212, 191, 0.1); color: var(--primary); border: 1px solid rgba(45, 212, 191, 0.4); padding: 6px 12px; font-size: 0.75rem; font-weight: 700; border-radius: 8px; cursor: pointer; text-transform: uppercase; transition: 0.3s; display: flex; align-items: center; gap: 5px; font-family: 'Inter', sans-serif;}
         .btn-ai:hover { background: rgba(45, 212, 191, 0.3); }
         .spin { animation: spin 1s linear infinite; }
@@ -209,7 +207,6 @@
            ========================================= */
         .modal-box.premium { padding: 0; display: flex; flex-direction: column; overflow: hidden; max-height: 90vh; }
         
-        /* Abas Superiores */
         .type-tabs { display: flex; border-bottom: 1px solid var(--border-color); background: var(--input-bg); }
         .type-tab { flex: 1; padding: 15px 5px; text-align: center; font-weight: 600; font-size: 0.8rem; border: none; background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;}
         .type-tab.active { background: rgba(255,255,255,0.05); color: var(--text-light); }
@@ -218,24 +215,20 @@
         .type-tab.entrada.active { border-bottom: 3px solid var(--success); color: var(--success); }
         .type-tab.investir.active { border-bottom: 3px solid var(--primary); color: var(--primary); }
 
-        /* Corpo do Modal */
         .modal-body { flex: 1; overflow-y: auto; padding: 25px 20px; scrollbar-width: none; }
         .modal-body::-webkit-scrollbar { display: none; }
 
-        /* Inputs de Valor e Data Invisíveis */
         .input-gigante { background: transparent !important; border: none !important; margin: 0 !important; color: var(--text-light); font-weight: bold; border-bottom: 2px dashed var(--border-color) !important; border-radius: 0 !important; transition: border-color 0.2s; }
         .input-gigante:focus { border-bottom-color: var(--primary) !important; outline: none; }
         
-        /* Ilhas (Agrupamento Visual) */
         .island-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 15px; }
         .island-label { display: block; font-size: 0.7rem; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
 
-        /* Chips Modernos */
-        .chip-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 10px 15px; border-radius: 10px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-family: 'Inter', sans-serif; }
+        /* Ajuste do botão Chip para caber em telas menores sem estourar o modal */
+        .chip-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 10px 5px; border-radius: 10px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; font-family: 'Inter', sans-serif; text-overflow: ellipsis; overflow: hidden; }
         .chip-btn:hover { background: rgba(255,255,255,0.02); }
         .chip-btn.active { background: var(--bg-card); border-color: var(--text-light); color: var(--text-light); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* Rodapé Fixo */
         .modal-footer { padding: 15px 20px; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; gap: 10px; border-radius: 0 0 20px 20px; }
 
         @media (min-width: 768px) {
@@ -430,8 +423,22 @@
     <button class="fab" onclick="abrirModalTransacao()"><i data-lucide="plus"></i></button>
 </div>
 
-<!-- MODAL CONFIRMAÇÃO (REFEITO PARA SER DINÂMICO E SEGURO) -->
-<div id="modal-confirm" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<!-- =========================================
+     MODAL DE CONFIRMAÇÃO DE SAÍDA (History Trap)
+     ========================================= -->
+<div id="modal-exit" class="modal-bg" onclick="if(event.target === this) window.history.back()">
+    <div class="modal-box" style="text-align: center; border-color: rgba(248, 113, 113, 0.4);">
+        <h3 style="font-family:'Inter', sans-serif; font-size:1.4rem; margin-bottom:10px; color:var(--text-light);"><i data-lucide="log-out" style="color:var(--danger); margin-right:5px;"></i> Sair</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px; line-height:1.4;">Tem certeza que deseja encerrar o aplicativo?</p>
+        <div style="display: flex; gap: 10px;">
+            <button class="quick-btn" onclick="window.history.back()" style="flex:1; justify-content:center;">Não</button>
+            <button class="btn-pay-fatura" onclick="history.go(-2)" style="flex:1; justify-content:center; background:var(--danger); color:white;">Sim, sair</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMAÇÃO PADRÃO -->
+<div id="modal-confirm" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box" style="text-align: center;">
         <div style="display:flex; justify-content:center; color:var(--warning); margin-bottom:15px;"><i data-lucide="alert-triangle" style="width:48px; height:48px;"></i></div>
         <h3 style="margin: 0 0 10px 0; color:var(--text-light)">Atenção</h3>
@@ -442,10 +449,8 @@
     </div>
 </div>
 
-<!-- =========================================
-     MODAL TRANSAÇÃO
-     ========================================= -->
-<div id="modal-transacao" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<!-- MODAL TRANSAÇÃO -->
+<div id="modal-transacao" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box premium">
         <!-- HEADER (TOP TABS) -->
         <div class="type-tabs">
@@ -462,20 +467,20 @@
             <input type="hidden" id="forma-pagamento" value="conta">
             <input type="hidden" id="tipo-lancamento" value="unica">
 
-            <!-- O ESSENCIAL: Valor e Data -->
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 25px;">
-                <div style="flex: 2; position: relative;">
-                    <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--text-muted); font-weight: bold;">R$</span>
-                    <input type="number" id="valor" class="input-gigante" placeholder="0,00" step="0.01" inputmode="decimal" style="font-size: 2rem; padding-left: 45px; height: 60px; color: var(--danger);">
+            <!-- O ESSENCIAL: Valor e Data (Responsive Corrigido) -->
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 25px; width: 100%;">
+                <div style="flex: 55%; position: relative; min-width: 0;">
+                    <span style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; color: var(--text-muted); font-weight: bold;">R$</span>
+                    <input type="number" id="valor" class="input-gigante" placeholder="0,00" step="0.01" inputmode="decimal" style="font-size: 1.7rem; padding-left: 35px; padding-right: 5px; height: 60px; color: var(--danger); width: 100%; box-sizing: border-box;">
                 </div>
-                <div style="flex: 1;">
-                    <input type="date" id="data-lancamento" class="input-gigante" style="height: 60px; font-size: 0.85rem; padding: 10px; text-align:center;">
+                <div style="flex: 45%; min-width: 0;">
+                    <input type="date" id="data-lancamento" class="input-gigante" style="height: 60px; font-size: 0.8rem; padding: 5px; text-align:center; width: 100%; box-sizing: border-box;">
                 </div>
             </div>
 
             <!-- DESCRIÇÃO COM AUTO-TAG -->
             <div style="position: relative; margin-bottom: 25px;">
-                <input type="text" id="desc" class="input-gigante" placeholder="Qual foi o gasto?" oninput="autoCategorizar()" style="width: 100%; padding-left: 10px; padding-right: 100px; height: 40px; font-size: 1rem;">
+                <input type="text" id="desc" class="input-gigante" placeholder="Qual foi o gasto?" oninput="autoCategorizar()" style="width: 100%; padding-left: 10px; padding-right: 100px; height: 40px; font-size: 1rem; box-sizing: border-box;">
                 <div id="tag-detectada" style="display: none; position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); color: var(--text-light); padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: bold;"></div>
             </div>
 
@@ -499,12 +504,11 @@
 
                 <div id="box-frequencia" style="margin-top: 15px;">
                     <label class="island-label">Frequência</label>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; gap: 5px;">
                         <button id="btn-tipo-unica" class="chip-btn active" style="flex: 1" onclick="selecionarChip('tipo', 'unica', this)">Única</button>
                         <button id="btn-tipo-parcelada" class="chip-btn" style="flex: 1; display: none;" onclick="selecionarChip('tipo', 'parcelada', this)">Parcelada</button>
                         <button id="btn-tipo-recorrente" class="chip-btn" style="flex: 1" onclick="selecionarChip('tipo', 'recorrente', this)">Mensal</button>
                     </div>
-                    <!-- AVISO DE VALOR TOTAL INSERIDO AQUI -->
                     <div id="dica-parcela" style="display:none; font-size:0.75rem; color:var(--warning); margin-top: 10px; text-align: center; border: 1px dashed var(--warning); padding: 8px; border-radius: 8px; background: rgba(250, 204, 21, 0.05);">
                         O valor lá de cima será dividido pela quantidade. Digite o <b>Valor Total</b> da compra.
                     </div>
@@ -527,7 +531,7 @@
     </div>
 </div>
 
-<div id="modal-config" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<div id="modal-config" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box">
         <h3 style="margin:0 0 15px 0; color:var(--text-light); border-bottom: 1px solid var(--border-color); padding-bottom:10px;"><i data-lucide="settings"></i> Configurações</h3>
         
@@ -554,7 +558,7 @@
     </div>
 </div>
 
-<div id="modal-cartao" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<div id="modal-cartao" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box">
         <h3 style="margin:0 0 15px 0; color:var(--text-light); border-bottom: 1px solid var(--border-color); padding-bottom:10px;"><i data-lucide="credit-card"></i> Gerenciar Cartão</h3>
         <input type="hidden" id="edit-cartao-id">
@@ -574,11 +578,11 @@
         </select>
 
         <button onclick="salvarCartao()" class="btn-pay-fatura" style="width:100%; margin-top:20px; padding:15px;">SALVAR CARTÃO</button>
-        <button onclick="document.getElementById('modal-cartao').style.display='none'; abrirConfig();" class="quick-btn" style="width:100%; margin-top:10px; background:transparent;">Cancelar</button>
+        <button onclick="window.history.back()" class="quick-btn" style="width:100%; margin-top:10px; background:transparent;">Cancelar</button>
     </div>
 </div>
 
-<div id="modal-caixinha" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<div id="modal-caixinha" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box">
         <h3 style="margin:0 0 15px 0; color:var(--text-light); border-bottom: 1px solid var(--border-color); padding-bottom:10px;"><i data-lucide="piggy-bank"></i> Gerenciar Caixinha</h3>
         <input type="hidden" id="edit-meta-id">
@@ -595,7 +599,7 @@
     </div>
 </div>
 
-<div id="modal-detalhes-caixinha" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<div id="modal-detalhes-caixinha" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box" style="padding:0; overflow:hidden">
         <div id="detalhe-header" style="background:var(--primary); padding:30px; text-align:center; color:#0f172a">
             <div id="detalhe-icone" style="display:flex; justify-content:center; margin-bottom:10px;"></div>
@@ -628,7 +632,7 @@
     </div>
 </div>
 
-<div id="modal-fatura-cartao" class="modal-bg" onclick="if(event.target === this) this.style.display='none'">
+<div id="modal-fatura-cartao" class="modal-bg" onclick="if(event.target === this) window.history.back()">
     <div class="modal-box premium" style="background: var(--bg-card); overflow: hidden;">
         <div id="fatura-header" style="padding:25px 25px 0 25px; text-align:center; color:#fff;">
             <div style="display:flex; justify-content:center; margin-bottom:10px;"><i data-lucide="credit-card" style="width:40px; height:40px;"></i></div>
@@ -652,6 +656,7 @@
 </div>
 
 <script>
+    // Configura PWA Manifest
     if (window.location.protocol !== 'file:') {
         const manifestContent = {
             "name": "FinTrack Pro", "short_name": "FinTrack", "description": "Seu controle financeiro inteligente",
@@ -674,7 +679,7 @@
 
     let dados = JSON.parse(localStorage.getItem('fintrack_v26_data')) ||[];
     
-    // MIGRATION SCRIPT
+    // MIGRATION SCRIPT (Legado parcelas)
     let precisaSalvarMigracao = false;
     let legacyGrupos = {};
     dados.forEach(t => {
@@ -709,6 +714,55 @@
 
     if(isLight) { document.body.classList.add('light-theme'); }
     if(isPrivacyMode) { document.body.classList.add('privacy-mode'); }
+
+    // ==========================================
+    // SISTEMA DE NAVEGAÇÃO / HISTORY TRAP
+    // ==========================================
+    
+    function setupHistoryTrap() {
+        if (!history.state || !history.state.base) {
+            history.replaceState({ backTrap: true }, '', ''); // A armadilha
+            history.pushState({ base: true }, '', '');        // Tela inicial verdadeira
+        }
+    }
+
+    window.addEventListener('popstate', (e) => {
+        // 1. Se o usuário cair na armadilha (tentou voltar para sair da tela inicial)
+        if (e.state && e.state.backTrap) {
+            history.pushState({ base: true }, '', ''); // Empurra a base de novo pra não fechar o navegador
+            document.getElementById('modal-exit').style.display = 'flex'; // Exibe a confirmação
+            return;
+        }
+
+        // 2. Esconde todos os modais normais sempre que o estado muda
+        document.querySelectorAll('.modal-bg').forEach(m => {
+            if(m.id !== 'modal-exit') m.style.display = 'none';
+        });
+
+        // 3. Se havia um modal específico no histórico para frente ou pra trás, mostra ele
+        if (e.state && e.state.modalId) {
+            let m = document.getElementById(e.state.modalId);
+            if (m) m.style.display = 'flex';
+        }
+    });
+
+    function openModal(id) {
+        // Esconde visulamente outros modais para manter a hierarquia limpa
+        document.querySelectorAll('.modal-bg').forEach(m => {
+            if(m.id !== 'modal-exit') m.style.display = 'none';
+        });
+        document.getElementById(id).style.display = 'flex';
+        history.pushState({ modalId: id }, '', `#${id}`);
+    }
+
+    // ==========================================
+    // TOASTS E UTILITÁRIOS DE SEGURANÇA
+    // ==========================================
+
+    const esc = (str) => {
+        if (!str) return '';
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    };
 
     let toastTimeout;
     function showToast(message, icon = 'check-circle', color = 'var(--success)') {
@@ -779,7 +833,7 @@
         islandInvestir.style.display = 'none';
         
         if (type === 'saida') {
-            document.getElementById('categoria').value = document.querySelector('#island-saida .chip-btn.active').innerText.includes('Fixo') ? 'Necessidades' : 'Desejos';
+            document.getElementById('categoria').value = document.querySelector('#island-saida .chip-btn.active').innerText.includes('Fixa') ? 'Necessidades' : 'Desejos';
             valorInput.style.color = 'var(--danger)';
             descInput.placeholder = "Qual foi o gasto?";
             islandSaida.style.display = 'block';
@@ -866,7 +920,7 @@
             btnParcelada.style.display = 'block'; 
             let selectCartao = document.getElementById('qual-cartao');
             let valorAtual = selectCartao.value; 
-            selectCartao.innerHTML = cartoes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            selectCartao.innerHTML = cartoes.map(c => `<option value="${c.id}">${esc(c.nome)}</option>`).join('');
             if (valorAtual && cartoes.some(c => c.id === valorAtual)) selectCartao.value = valorAtual; 
         } else {
             boxCartao.style.display = 'none';
@@ -876,13 +930,14 @@
             }
         }
         
-        document.getElementById('dica-parcela').style.display = tipo === 'parcelada' ? 'block' : 'none';
-        inputParcelas.style.display = tipo === 'parcelada' ? 'block' : 'none'; 
+        // Esconde a dica de parcela quando for edição para não confundir o usuário (Bug 1.2 Fixed)
+        let isEditando = document.getElementById('edit-id').value !== "";
+        document.getElementById('dica-parcela').style.display = (tipo === 'parcelada' && !isEditando) ? 'block' : 'none';
+        inputParcelas.style.display = (tipo === 'parcelada' && !isEditando) ? 'block' : 'none'; 
     }
 
     function abrirModalTransacao(id = null) {
         atualizarSelectMetas(); 
-        const m = document.getElementById('modal-transacao');
         document.getElementById('edit-id').value = id || "";
         let tagUi = document.getElementById('tag-detectada');
         
@@ -919,7 +974,7 @@
         }
         
         verificarCampos();
-        m.style.display = 'flex'; 
+        openModal('modal-transacao');
         refreshIcons();
     }
 
@@ -933,16 +988,9 @@
             <button class="btn-pay-fatura" id="btn-custom-ok" style="flex:1; background:${btnOkColor}; color: #fff;">${btnOkText}</button>
         `;
 
-        document.getElementById('btn-custom-ok').addEventListener('click', () => { 
-            document.getElementById('modal-confirm').style.display = 'none'; 
-            if(callbackOk) callbackOk(); 
-        }); 
-        document.getElementById('btn-custom-cancel').addEventListener('click', () => { 
-            document.getElementById('modal-confirm').style.display = 'none'; 
-            if(callbackCancel) callbackCancel(); 
-        }); 
-        
-        document.getElementById('modal-confirm').style.display = 'flex';
+        document.getElementById('btn-custom-ok').onclick = () => { window.history.back(); if(callbackOk) setTimeout(callbackOk, 50); }; 
+        document.getElementById('btn-custom-cancel').onclick = () => { window.history.back(); if(callbackCancel) setTimeout(callbackCancel, 50); }; 
+        openModal('modal-confirm');
     }
 
     function salvarTransacao(manterAberto = false) {
@@ -963,7 +1011,6 @@
         const [a, m, d] = dat.split('-'); 
         
         let aplicarEdicao = (aplicarEmTodas = false) => {
-            // Remove sufixos como (1/8) para não duplicar
             let cleanDesc = desc.replace(/\s*\(\d+\/\d+\)$/, '').trim(); 
             
             if (eId) {
@@ -975,16 +1022,18 @@
                         if (x.groupId === itemOrig.groupId) {
                             let newDesc = cleanDesc;
                             if (x.parcelasTotal > 1) { newDesc = `${cleanDesc} (${x.parcelaNum}/${x.parcelasTotal})`; }
-                            x.desc = newDesc; x.subcat = subcat; x.cat = cat; x.meta = mDest; x.formaPgto = forma; 
-                            x.valor = val; // VALOR EDITADO APLICADO A TODAS AS PARCELAS!
-                            if(idCartaoDestino) x.cartaoId = idCartaoDestino;
+                            x.desc = newDesc; x.subcat = subcat; x.cat = cat; x.meta = mDest; x.formaPgto = forma;
+                            x.pago = (forma === 'conta'); // Correção do Bug 1.1
+                            x.valor = val;
+                            if(forma === 'cartao') x.cartaoId = idCartaoDestino; else delete x.cartaoId;
                         }
                     });
                     itemOrig.dataReal = dat; itemOrig.mesIso = dat.substring(0,7); itemOrig.dia = dBase.getDate();
                 } else {
                     let idx = dados.findIndex(x => x.id == eId); 
                     dados[idx].desc = desc; dados[idx].subcat = subcat; dados[idx].valor = val; dados[idx].cat = cat; dados[idx].dataReal = dat; dados[idx].mesIso = dat.substring(0,7); dados[idx].dia = dBase.getDate(); dados[idx].meta = mDest; dados[idx].formaPgto = forma; 
-                    if(idCartaoDestino) dados[idx].cartaoId = idCartaoDestino;
+                    dados[idx].pago = (forma === 'conta'); // Correção do Bug 1.1
+                    if(forma === 'cartao') dados[idx].cartaoId = idCartaoDestino; else delete dados[idx].cartaoId;
                 }
             } else {
                 let p = 1; let pago = forma === 'conta'; 
@@ -998,14 +1047,19 @@
                     
                     let dI = formatarDataISO(dataParcela);
                     let descF = tipo === 'parcelada' ? `${cleanDesc} (${i + 1}/${p})` : desc;
-                    let valFinal = tipo === 'parcelada' ? val/p : val; // SISTEMA DIVIDE VALOR TOTAL AQUI
+                    let valFinal = tipo === 'parcelada' ? Math.round((val/p) * 100) / 100 : val; // Bug Centavos Fixed
                     
                     dados.push({ id: baseId + i, groupId: groupId, parcelaNum: i+1, parcelasTotal: p, desc: descF, subcat: subcat, valor: valFinal, cat: cat, meta: mDest, mesIso: dI.substring(0,7), dataReal: dI, dia: dataParcela.getDate(), formaPgto: forma, cartaoId: idCartaoDestino, pago: pago });
                 }
             }
-            salvarStorageTransacoes(manterAberto); showToast('Lançamento salvo!');
-            if (manterAberto) { document.getElementById('desc').value = ''; document.getElementById('valor').value = ''; document.getElementById('subcat').value = ''; document.getElementById('tag-detectada').style.display = 'none'; document.getElementById('edit-id').value = ''; document.getElementById('desc').focus();
-            } else { if(document.getElementById('modal-fatura-cartao').style.display === 'flex') { renderFaturaCartao(); } }
+            salvarStorageTransacoes(); 
+            showToast('Lançamento salvo!');
+            if (manterAberto) { 
+                document.getElementById('desc').value = ''; document.getElementById('valor').value = ''; document.getElementById('subcat').value = ''; document.getElementById('tag-detectada').style.display = 'none'; document.getElementById('edit-id').value = ''; document.getElementById('desc').focus();
+            } else { 
+                window.history.back(); // Retorna fechando o modal transação
+                if(document.getElementById('modal-fatura-cartao').style.display === 'flex') { renderFaturaCartao(); } 
+            }
         };
 
         if (eId) {
@@ -1030,9 +1084,9 @@
             <button class="quick-btn" id="btn-confirm-cancel" style="flex:1">Voltar</button>
             <button class="btn-pay-fatura" id="btn-confirm-ok" style="flex:1; background:var(--danger)">Sim, Excluir</button>
         `;
-        document.getElementById('btn-confirm-ok').addEventListener('click', () => { document.getElementById('modal-confirm').style.display = 'none'; callback(); }); 
-        document.getElementById('btn-confirm-cancel').addEventListener('click', () => { document.getElementById('modal-confirm').style.display = 'none'; }); 
-        document.getElementById('modal-confirm').style.display = 'flex'; 
+        document.getElementById('btn-confirm-ok').onclick = () => { window.history.back(); setTimeout(callback, 50); }; 
+        document.getElementById('btn-confirm-cancel').onclick = () => { window.history.back(); }; 
+        openModal('modal-confirm');
     }
 
     function excluir(id) {
@@ -1042,21 +1096,22 @@
             document.getElementById('confirm-msg').innerText = `Deseja excluir apenas esta parcela ou apagar TODAS as ${item.parcelasTotal} parcelas da sua fatura?`; 
             const btnArea = document.getElementById('confirm-btn-area');
             btnArea.innerHTML = `
-                <button class="quick-btn" onclick="fecharModais()" style="flex:1;">Cancelar</button>
+                <button class="quick-btn" onclick="window.history.back()" style="flex:1;">Cancelar</button>
                 <button class="btn-pay-fatura" onclick="executarExclusao(${id}, null)" style="flex:1; background:var(--warning); color:#0f172a;">Só Esta</button>
                 <button class="btn-pay-fatura" onclick="executarExclusao(null, ${item.groupId})" style="flex:1; background:var(--danger);">Todas</button>
             `;
-            document.getElementById('modal-confirm').style.display = 'flex';
+            openModal('modal-confirm');
         } else {
             confirmarAcao("Deseja excluir este lançamento?", () => {
                 dados = dados.filter(x => x.id !== id);
-                salvarStorageTransacoes(false);
+                salvarStorageTransacoes();
                 showToast('Excluído!', 'trash-2', 'var(--danger)');
             });
         }
     }
 
     window.executarExclusao = function(id, groupId) {
+        window.history.back(); // Fecha o confirm
         if (groupId) {
             dados = dados.filter(x => x.groupId !== groupId);
             showToast('Todas as parcelas foram excluídas!', 'trash-2', 'var(--danger)');
@@ -1064,9 +1119,7 @@
             dados = dados.filter(x => x.id !== id);
             showToast('Parcela excluída!', 'trash-2', 'var(--danger)');
         }
-        document.getElementById('modal-confirm').style.display = 'none';
-        salvarStorageTransacoes(false);
-        
+        salvarStorageTransacoes();
         if(document.getElementById('modal-fatura-cartao').style.display === 'flex') { renderFaturaCartao(); }
     };
 
@@ -1115,38 +1168,48 @@
 
         contentBox.style.display = 'block'; contentBox.innerHTML = '<i data-lucide="loader" class="spin"></i> Analisando suas finanças...'; lucide.createIcons();
         let resp = await fetchGroqIA(sysPrompt, userPrompt, btn, '<i data-lucide="loader" class="spin"></i>');
-        if(resp) { contentBox.innerHTML = resp.replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--primary);">$1</strong>'); btn.innerHTML = '<i data-lucide="eraser"></i> Limpar'; btn.dataset.action = 'clear';
+        if(resp) { contentBox.innerHTML = esc(resp).replace(/&lt;strong&gt;/g, '<strong>').replace(/&lt;\/strong&gt;/g, '</strong>').replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--primary);">$1</strong>'); btn.innerHTML = '<i data-lucide="eraser"></i> Limpar'; btn.dataset.action = 'clear';
         } else { contentBox.innerHTML = "<span style='opacity:0.7; color:var(--danger);'>O Oráculo está offline no momento.</span>"; btn.innerHTML = originalHtml; }
         lucide.createIcons();
     }
 
     // ==========================================
-    // FUNÇÕES GERAIS E RENDERIZAÇÃO
+    // RENDERIZAÇÃO
     // ==========================================
     
-    function atualizarSelectMetas() { const s = document.getElementById('meta-destino'); s.innerHTML = ''; metas.forEach(m => { s.innerHTML += `<option value="${m.id}">${m.nome}</option>`; }); }
+    function atualizarSelectMetas() { const s = document.getElementById('meta-destino'); s.innerHTML = ''; metas.forEach(m => { s.innerHTML += `<option value="${m.id}">${esc(m.nome)}</option>`; }); }
     function mudarMes(o) { window.limiteExtratoGeral = 7; dataAtual.setMonth(dataAtual.getMonth() + o); render(); }
     function mudarAba(t, e) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); document.getElementById('view-' + t).classList.add('active'); e.classList.add('active'); setTimeout(() => { if(t === 'simulador') atualizarSimulador(); else render(); }, 50); }
     function setFiltro(t, e) { window.limiteExtratoGeral = 7; filtroAtual = t; document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); e.classList.add('active'); render(); }
-    function addRapido(d, v, c) { let h = new Date(); dados.push({ id: Date.now(), desc: d, subcat: c, valor: v, cat: c, mesIso: formatarDataISO(h).substring(0,7), dataReal: formatarDataISO(h), dia: h.getDate(), formaPgto: 'conta', pago: true }); salvarStorageTransacoes(false); showToast(`Lançamento rápido: R$ ${v}!`); }
-    function fecharModais() { document.querySelectorAll('.modal-bg').forEach(m => m.style.display='none'); }
+    function addRapido(d, v, c) { let h = new Date(); dados.push({ id: Date.now(), desc: d, subcat: c, valor: v, cat: c, mesIso: formatarDataISO(h).substring(0,7), dataReal: formatarDataISO(h), dia: h.getDate(), formaPgto: 'conta', pago: true }); salvarStorageTransacoes(); showToast(`Lançamento rápido: R$ ${v}!`); }
     
-    function abrirConfig() { document.getElementById('config-teto').value = tetoGastos; document.getElementById('config-groq-key').value = apiKeyGroq; renderCartoesConfig(); document.getElementById('modal-config').style.display = 'flex'; refreshIcons(); }
-    function salvarConfig() { tetoGastos = parseFloat(document.getElementById('config-teto').value) || 0; apiKeyGroq = document.getElementById('config-groq-key').value.trim(); localStorage.setItem('fintrack_v26_teto', tetoGastos); localStorage.setItem('fintrack_v26_groq_key', apiKeyGroq); document.getElementById('modal-config').style.display = 'none'; render(); showToast('Configurações salvas!'); }
+    function abrirConfig() { document.getElementById('config-teto').value = tetoGastos; document.getElementById('config-groq-key').value = apiKeyGroq; renderCartoesConfig(); openModal('modal-config'); refreshIcons(); }
+    function salvarConfig() { tetoGastos = parseFloat(document.getElementById('config-teto').value) || 0; apiKeyGroq = document.getElementById('config-groq-key').value.trim(); localStorage.setItem('fintrack_v26_teto', tetoGastos); localStorage.setItem('fintrack_v26_groq_key', apiKeyGroq); window.history.back(); render(); showToast('Configurações salvas!'); }
 
-    function renderCartoesConfig() { const lista = document.getElementById('lista-cartoes-config'); lista.innerHTML = ''; cartoes.forEach(c => { lista.innerHTML += `<div class="cartao-item"><div style="display:flex; align-items:center; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 4px; background: ${c.cor}; border: 1px solid rgba(255,255,255,0.2);"></div><div><strong style="font-size: 0.9rem;">${c.nome}</strong><br><small style="color:var(--text-muted)">Limite: ${formatarMoeda(c.limite)}</small></div></div><div><button class="btn-action" onclick="abrirModalCartao('${c.id}')"><i data-lucide="pencil" style="width:16px;"></i></button><button class="btn-action" onclick="excluirCartao('${c.id}')"><i data-lucide="trash-2" style="width:16px; color:var(--danger);"></i></button></div></div>`; }); refreshIcons(); }
-    function abrirModalCartao(id = null) { document.getElementById('edit-cartao-id').value = id || ""; if (id) { let c = cartoes.find(x => x.id === id); document.getElementById('cartao-nome').value = c.nome; document.getElementById('cartao-limite').value = c.limite; document.getElementById('cartao-cor').value = c.cor; } else { document.getElementById('cartao-nome').value = ""; document.getElementById('cartao-limite').value = ""; document.getElementById('cartao-cor').value = "linear-gradient(135deg, #2b5876, #4e4376)"; } document.getElementById('modal-config').style.display = 'none'; document.getElementById('modal-cartao').style.display = 'flex'; refreshIcons(); }
-    function salvarCartao() { let id = document.getElementById('edit-cartao-id').value; let nome = document.getElementById('cartao-nome').value; let lim = parseFloat(document.getElementById('cartao-limite').value) || 0; let cor = document.getElementById('cartao-cor').value; if (!nome || lim <= 0) return alert("Preencha o nome e um limite válido."); if (id) { let idx = cartoes.findIndex(x => x.id === id); cartoes[idx].nome = nome; cartoes[idx].limite = lim; cartoes[idx].cor = cor; } else { cartoes.push({ id: 'c_' + Date.now(), nome: nome, limite: lim, cor: cor }); } localStorage.setItem('fintrack_v26_cartoes', JSON.stringify(cartoes)); document.getElementById('modal-cartao').style.display = 'none'; abrirConfig(); showToast('Cartão salvo!'); }
+    function renderCartoesConfig() { const lista = document.getElementById('lista-cartoes-config'); lista.innerHTML = ''; cartoes.forEach(c => { lista.innerHTML += `<div class="cartao-item"><div style="display:flex; align-items:center; gap: 10px;"><div style="width: 20px; height: 20px; border-radius: 4px; background: ${c.cor}; border: 1px solid rgba(255,255,255,0.2);"></div><div><strong style="font-size: 0.9rem;">${esc(c.nome)}</strong><br><small style="color:var(--text-muted)">Limite: ${formatarMoeda(c.limite)}</small></div></div><div><button class="btn-action" onclick="abrirModalCartao('${c.id}')"><i data-lucide="pencil" style="width:16px;"></i></button><button class="btn-action" onclick="excluirCartao('${c.id}')"><i data-lucide="trash-2" style="width:16px; color:var(--danger);"></i></button></div></div>`; }); refreshIcons(); }
+    function abrirModalCartao(id = null) { document.getElementById('edit-cartao-id').value = id || ""; if (id) { let c = cartoes.find(x => x.id === id); document.getElementById('cartao-nome').value = c.nome; document.getElementById('cartao-limite').value = c.limite; document.getElementById('cartao-cor').value = c.cor; } else { document.getElementById('cartao-nome').value = ""; document.getElementById('cartao-limite').value = ""; document.getElementById('cartao-cor').value = "linear-gradient(135deg, #2b5876, #4e4376)"; } openModal('modal-cartao'); refreshIcons(); }
+    function salvarCartao() { let id = document.getElementById('edit-cartao-id').value; let nome = document.getElementById('cartao-nome').value; let lim = parseFloat(document.getElementById('cartao-limite').value) || 0; let cor = document.getElementById('cartao-cor').value; if (!nome || lim <= 0) return alert("Preencha o nome e um limite válido."); if (id) { let idx = cartoes.findIndex(x => x.id === id); cartoes[idx].nome = nome; cartoes[idx].limite = lim; cartoes[idx].cor = cor; } else { cartoes.push({ id: 'c_' + Date.now(), nome: nome, limite: lim, cor: cor }); } localStorage.setItem('fintrack_v26_cartoes', JSON.stringify(cartoes)); window.history.back(); showToast('Cartão salvo!'); }
     function excluirCartao(id) { confirmarAcao("Excluir cartão?", () => { cartoes = cartoes.filter(x => x.id !== id); localStorage.setItem('fintrack_v26_cartoes', JSON.stringify(cartoes)); renderCartoesConfig(); showToast('Cartão excluído!', 'trash-2', 'var(--danger)'); }); }
     function exportarJSON() { let eD = { dados: dados, metas: metas, teto: tetoGastos, cartoes: cartoes }; let dS = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(eD)); let a = document.createElement('a'); a.href = dS; a.download = "FinTrack_Backup.json"; a.click(); }
-    function importarJSON(event) { let file = event.target.files[0]; if (!file) return; let reader = new FileReader(); reader.onload = function(e) { try { let imp = JSON.parse(e.target.result); if(!imp || !Array.isArray(imp.dados) || !Array.isArray(imp.metas)) throw new Error("Estrutura inválida"); dados = imp.dados; metas = imp.metas; if(imp.teto) tetoGastos = imp.teto; if(imp.cartoes) cartoes = imp.cartoes; salvarStorageTransacoes(false); showToast('Restaurado!'); } catch (err) { alert("Arquivo inválido."); } }; reader.readAsText(file); }
     
-    window.pagarFaturaMes = function(cartaoId) { confirmarAcao("Pagar a fatura usando seu Saldo?", () => { const mSel = formatarDataISO(dataAtual).substring(0,7); dados.forEach(t => { if(t.formaPgto === 'cartao' && t.mesIso <= mSel && t.cartaoId === cartaoId && !t.pago) { t.pago = true; } }); salvarStorageTransacoes(false); showToast('Fatura paga!'); }); };
+    function importarJSON(event) { 
+        let file = event.target.files[0]; if (!file) return; let reader = new FileReader(); 
+        reader.onload = function(e) { 
+            try { 
+                let imp = JSON.parse(e.target.result); 
+                if(!imp || !Array.isArray(imp.dados) || !Array.isArray(imp.metas)) throw new Error("Estrutura inválida"); 
+                dados = imp.dados; metas = imp.metas; if(imp.teto) tetoGastos = imp.teto; if(imp.cartoes) cartoes = imp.cartoes; 
+                salvarStorageTransacoes(); showToast('Restaurado!'); window.history.back();
+            } catch (err) { alert("Arquivo inválido."); } 
+        }; reader.readAsText(file); 
+    }
+    
+    window.pagarFaturaMes = function(cartaoId) { confirmarAcao("Pagar a fatura usando seu Saldo?", () => { const mSel = formatarDataISO(dataAtual).substring(0,7); dados.forEach(t => { if(t.formaPgto === 'cartao' && t.mesIso <= mSel && t.cartaoId === cartaoId && !t.pago) { t.pago = true; } }); salvarStorageTransacoes(); showToast('Fatura paga!'); }); };
     
     let faturaCartaoAtualId = null; let abaFaturaAtual = 'atual'; let limiteFatura = 5;
     window.mudarAbaFatura = function(aba) { abaFaturaAtual = aba; limiteFatura = 5; document.querySelectorAll('.fatura-tab').forEach(b => b.classList.remove('active')); document.querySelectorAll('.fatura-tab').forEach(b => { if((aba === 'atual' && b.innerText.includes('Atual')) || (aba === 'proxima' && b.innerText.includes('Próxima'))) { b.classList.add('active'); } }); renderFaturaCartao(); };
     window.expandirFatura = function() { limiteFatura += 50; renderFaturaCartao(); };
-    window.abrirFaturaCartao = function(cartaoId) { faturaCartaoAtualId = cartaoId; abaFaturaAtual = 'atual'; limiteFatura = 5; document.querySelectorAll('.fatura-tab').forEach(b => b.classList.remove('active')); document.querySelectorAll('.fatura-tab')[0].classList.add('active'); document.getElementById('modal-fatura-cartao').style.display = 'flex'; renderFaturaCartao(); };
+    window.abrirFaturaCartao = function(cartaoId) { faturaCartaoAtualId = cartaoId; abaFaturaAtual = 'atual'; limiteFatura = 5; document.querySelectorAll('.fatura-tab').forEach(b => b.classList.remove('active')); document.querySelectorAll('.fatura-tab')[0].classList.add('active'); openModal('modal-fatura-cartao'); renderFaturaCartao(); };
 
     function renderFaturaCartao() {
         if (!faturaCartaoAtualId) return; let cartao = cartoes.find(c => c.id === faturaCartaoAtualId); if (!cartao) return;
@@ -1163,7 +1226,7 @@
 
         lista.sort((a, b) => new Date(b.dataReal) - new Date(a.dataReal));
         
-        document.getElementById('fatura-header').style.background = cartao.cor; document.getElementById('fatura-nome').innerText = cartao.nome; document.getElementById('fatura-total').innerText = formatarMoeda(total); 
+        document.getElementById('fatura-header').style.background = cartao.cor; document.getElementById('fatura-nome').innerText = esc(cartao.nome); document.getElementById('fatura-total').innerText = formatarMoeda(total); 
         if (isFaturaAtual) { document.getElementById('fatura-status').innerText = total > 0 ? 'Fatura em Aberto' : 'Fatura Paga / Sem Pendências'; } else { document.getElementById('fatura-status').innerText = `Fatura de ${mesesNome[proxMesData.getMonth()]} (Previsão)`; }
         
         let listaEl = document.getElementById('fatura-lista'); listaEl.innerHTML = ''; 
@@ -1171,23 +1234,108 @@
 
         renderLista.forEach(t => { 
             let isAtrasado = t.mesIso < mI && !t.pago && isFaturaAtual; 
-            listaEl.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 10px; border-bottom:1px solid var(--border-color); font-size:0.85rem; align-items:center; cursor: pointer; transition: background 0.2s; border-radius: 8px;" onclick="abrirModalTransacao(${t.id})" onmouseover="this.style.background='var(--input-bg)'" onmouseout="this.style.background='transparent'"><div style="display:flex; align-items:center; gap: 12px; pointer-events: none;"><div style="width: 36px; height: 36px; border-radius: 10px; background: var(--input-bg); display:flex; justify-content:center; align-items:center; color: var(--primary);"><i data-lucide="${getIcon(t.desc, t.cat, t.meta, t.subcat)}" style="width: 18px;"></i></div><div><strong style="color:var(--text-light)">${t.desc}</strong><br><small style="color:var(--text-muted)">${formatarDataBr(t.dataReal)} ${isAtrasado ? '<span style="color:var(--danger)">• Atrasado</span>' : ''}${t.pago ? ' <span style="color:var(--success)">• Pago</span>' : ''}</small></div></div><strong class="blur-val" style="color:var(--text-light); pointer-events: none;">${formatarMoeda(t.valor)}</strong></div>`; 
+            listaEl.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 10px; border-bottom:1px solid var(--border-color); font-size:0.85rem; align-items:center; cursor: pointer; transition: background 0.2s; border-radius: 8px;" onclick="abrirModalTransacao(${t.id})" onmouseover="this.style.background='var(--input-bg)'" onmouseout="this.style.background='transparent'"><div style="display:flex; align-items:center; gap: 12px; pointer-events: none;"><div style="width: 36px; height: 36px; border-radius: 10px; background: var(--input-bg); display:flex; justify-content:center; align-items:center; color: var(--primary);"><i data-lucide="${getIcon(t.desc, t.cat, t.meta, t.subcat)}" style="width: 18px;"></i></div><div><strong style="color:var(--text-light)">${esc(t.desc)}</strong><br><small style="color:var(--text-muted)">${formatarDataBr(t.dataReal)} ${isAtrasado ? '<span style="color:var(--danger)">• Atrasado</span>' : ''}${t.pago ? ' <span style="color:var(--success)">• Pago</span>' : ''}</small></div></div><strong class="blur-val" style="color:var(--text-light); pointer-events: none;">${formatarMoeda(t.valor)}</strong></div>`; 
         }); 
 
         if (lista.length === 0) { listaEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding: 30px 0;">Nenhum lançamento.</div>`; } 
         document.getElementById('fatura-ver-mais-container').style.display = showMore ? 'block' : 'none';
         let acoesEl = document.getElementById('fatura-acoes'); 
-        if (isFaturaAtual && total > 0) { acoesEl.innerHTML = `<button onclick="document.getElementById('modal-fatura-cartao').style.display='none'; pagarFaturaMes('${cartao.id}');" class="btn-pay-fatura" style="width:100%; padding: 15px; font-size: 1.1rem; border-radius: 12px;">PAGAR FATURA</button>`; } else { acoesEl.innerHTML = `<button onclick="document.getElementById('modal-fatura-cartao').style.display='none';" class="quick-btn" style="width:100%; padding: 15px; border-radius: 12px; font-weight: bold; background: var(--input-bg);">Fechar</button>`; }
+        if (isFaturaAtual && total > 0) { acoesEl.innerHTML = `<button onclick="window.history.back(); setTimeout(() => pagarFaturaMes('${cartao.id}'), 50);" class="btn-pay-fatura" style="width:100%; padding: 15px; font-size: 1.1rem; border-radius: 12px; color: #0f172a;">PAGAR FATURA</button>`; } else { acoesEl.innerHTML = `<button onclick="window.history.back();" class="quick-btn" style="width:100%; padding: 15px; border-radius: 12px; font-weight: bold; background: var(--input-bg);">Fechar</button>`; }
         refreshIcons();
     }
 
-    function salvarStorageTransacoes(manterAberto = false) { localStorage.setItem('fintrack_v26_data', JSON.stringify(dados)); if(!manterAberto) { document.getElementById('modal-transacao').style.display = 'none'; } render(); }
+    function salvarStorageTransacoes() { 
+        try {
+            localStorage.setItem('fintrack_v26_data', JSON.stringify(dados)); render(); 
+        } catch(e) {
+            showToast("Erro: Espaço de celular cheio!", "alert-triangle", "var(--danger)");
+        }
+    }
     
-    let historicosCaixinhasGlobais = {}; function checkBateuMetaGlobal(mI) { return dados.filter(x => x.cat === 'Investimentos' && x.mesIso <= mI).reduce((s, t) => s + t.valor, 0) >= 1000; } function simularEvolucaoCaixinha(mId) { let tM = dados.filter(x => x.cat === 'Investimentos' && x.meta === mId); if(tM.length === 0) { return { principal: 0, rendimento: 0, total: 0, historico:[], msgDia: "Sem depósitos" }; } tM.sort((a, b) => new Date(a.dataReal) - new Date(b.dataReal)); let dI = new Date(tM[0].dataReal + "T00:00:00"); let hL = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0); hL.setHours(23,59,59,999); let agora = new Date(); let hojeStr = formatarDataISO(agora); let sP = 0; let sR = 0; let hC =[]; let mH = "Sem rendimento"; if (dI > hL) { return { principal: 0, rendimento: 0, total: 0, historico:[], msgDia: "Depósito no futuro" }; } while (dI <= hL) { let dS = formatarDataISO(dI); let mS = dS.substring(0,7); let dep = tM.filter(x => x.dataReal === dS).reduce((s, t) => s + t.valor, 0); sP += dep; let rD = 0; let dw = dI.getDay(); let isFds = (dw === 0 || dw === 6); let isPast = dS < hojeStr; let isToday = dS === hojeStr; if (!isFds && (sP + sR) > 0) { let tx = TAXA_DIARIA_BASE * (checkBateuMetaGlobal(mS) ? 1.15 : 1.00); if (isPast) { rD = (sP + sR) * tx; sR += rD; } else if (isToday) { mH = `+ ${formatarMoeda((sP + sR) * tx)} hoje`; } } if (isToday && isFds) { mH = "Fim de semana"; } else if (isToday && (sP+sR) === 0) { mH = "Sem depósitos"; } if ((rD > 0 || dep > 0) && isPast) { hC.unshift({ data: dS, deposito: dep, rendimento: rD, total: sP + sR }); } else if (dep > 0 && isToday) { hC.unshift({ data: dS, deposito: dep, rendimento: 0, total: sP + sR }); } dI.setDate(dI.getDate() + 1); } return { principal: sP, rendimento: sR, total: sP + sR, historico: hC, msgDia: mH }; }
-    function abrirModalCaixinha(id = null) { document.getElementById('edit-meta-id').value = id || ""; if(id) { let m = metas.find(x => x.id === id); document.getElementById('meta-icone').value = m.icone || 'target'; document.getElementById('meta-nome').value = m.nome; document.getElementById('meta-alvo').value = m.alvo || ''; } else { document.getElementById('meta-icone').value = 'target'; document.getElementById('meta-nome').value = ''; document.getElementById('meta-alvo').value = ''; } document.getElementById('modal-caixinha').style.display = 'flex'; refreshIcons(); }
-    function salvarCaixinha() { const id = document.getElementById('edit-meta-id').value; const ic = document.getElementById('meta-icone').value || 'target'; const nm = document.getElementById('meta-nome').value; const al = parseFloat(document.getElementById('meta-alvo').value) || 0; if(!nm) return alert("Nome?"); if (id) { let idx = metas.findIndex(x => x.id === id); metas[idx].nome = nm; metas[idx].icone = ic; metas[idx].alvo = al; } else { metas.push({ id: 'meta_' + Date.now(), nome: nm, icone: ic, alvo: al }); } localStorage.setItem('fintrack_v26_metas', JSON.stringify(metas)); document.getElementById('modal-caixinha').style.display = 'none'; render(); showToast('Salvo!'); }
-    function excluirCaixinha(id) { confirmarAcao("Apagar caixinha?", () => { metas = metas.filter(x => x.id !== id); dados.forEach(t => { if(t.cat === 'Investimentos' && t.meta === id) t.meta = null; }); localStorage.setItem('fintrack_v26_metas', JSON.stringify(metas)); salvarStorageTransacoes(false); showToast('Excluída!', 'trash-2', 'var(--danger)'); }); }
-    function abrirDetalhesCaixinha(id) { let m = metas.find(x => x.id === id); let s = historicosCaixinhasGlobais[id]; document.getElementById('detalhe-nome').innerText = m.nome; document.getElementById('detalhe-icone').innerHTML = `<i data-lucide="${m.icone || 'trending-up'}" style="width:48px; height:48px;"></i>`; document.getElementById('detalhe-principal').innerText = formatarMoeda(s.principal); document.getElementById('detalhe-rendimento').innerText = "+ " + formatarMoeda(s.rendimento); document.getElementById('detalhe-total').innerText = formatarMoeda(s.total); const bP = document.getElementById('detalhe-predicao'); if (m.alvo > 0 && s.principal > 0) { let mD = new Set(dados.filter(x => x.cat === 'Investimentos' && x.meta === id).map(x => x.mesIso)).size; let med = s.principal / (mD || 1); let fl = m.alvo - s.total; if (fl > 0 && med > 0) { let mR = Math.ceil(fl / med); let dF = new Date(); dF.setMonth(dF.getMonth() + mR); document.getElementById('predicao-texto').innerText = `${mesesNome[dF.getMonth()]} ${dF.getFullYear()}`; bP.style.display = 'flex'; } else { bP.style.display = fl <= 0 ? 'flex' : 'none'; if(fl <= 0) document.getElementById('predicao-texto').innerText = "Alcançada! 🎉"; } } else { bP.style.display = 'none'; } const lH = document.getElementById('detalhe-lista-historico'); lH.innerHTML = ''; s.historico.slice(0, 30).forEach(h => { lH.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-color); font-size:0.85rem;"><span>${formatarDataBr(h.data)}${h.deposito > 0 ? '<br><small style="color:var(--text-muted)">Aporte: ' + formatarMoeda(h.deposito) + '</small>' : ''}</span><div style="text-align:right;"><strong style="color:var(--success);" class="blur-val">+ ${formatarMoeda(h.rendimento)}</strong><br><small style="color:var(--text-muted);" class="blur-val">${formatarMoeda(h.total)}</small></div></div>`; }); document.getElementById('detalhe-acoes').innerHTML = `<button onclick="document.getElementById('modal-detalhes-caixinha').style.display='none'; abrirModalCaixinha('${id}')" class="quick-btn" style="flex:1; margin-right:10px; border:none; background:rgba(45,212,191,0.1); color:var(--primary);"><i data-lucide="pencil"></i> Editar</button><button onclick="document.getElementById('modal-detalhes-caixinha').style.display='none'; excluirCaixinha('${id}')" class="quick-btn" style="flex:1; border:none; background:rgba(248,113,113,0.1); color:var(--danger);"><i data-lucide="trash-2"></i> Excluir</button>`; document.getElementById('modal-detalhes-caixinha').style.display = 'flex'; refreshIcons(); }
+    let historicosCaixinhasGlobais = {}; 
+    function checkBateuMetaGlobal(mI) { return dados.filter(x => x.cat === 'Investimentos' && x.mesIso <= mI).reduce((s, t) => s + t.valor, 0) >= 1000; } 
+    
+    function simularEvolucaoCaixinha(mId) { 
+        let tM = dados.filter(x => x.cat === 'Investimentos' && x.meta === mId); 
+        if(tM.length === 0) { return { principal: 0, rendimento: 0, total: 0, historico:[], msgDia: "Sem depósitos" }; } 
+        tM.sort((a, b) => new Date(a.dataReal) - new Date(b.dataReal)); 
+        let dI = new Date(tM[0].dataReal + "T00:00:00"); 
+        let hL = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0); 
+        hL.setHours(23,59,59,999); 
+        let agora = new Date(); let hojeStr = formatarDataISO(agora); 
+        let sP = 0; let sR = 0; let hC =[]; let mH = "Sem rendimento"; 
+        
+        if (dI > hL) { return { principal: 0, rendimento: 0, total: 0, historico:[], msgDia: "Depósito no futuro" }; } 
+        
+        while (dI <= hL) { 
+            let dS = formatarDataISO(dI); let mS = dS.substring(0,7); 
+            let dep = tM.filter(x => x.dataReal === dS).reduce((s, t) => s + t.valor, 0); sP += dep; 
+            let rD = 0; let dw = dI.getDay(); let isFds = (dw === 0 || dw === 6); let isPast = dS < hojeStr; let isToday = dS === hojeStr; 
+            
+            if (!isFds && (sP + sR) > 0) { 
+                let tx = TAXA_DIARIA_BASE * (checkBateuMetaGlobal(mS) ? 1.15 : 1.00); 
+                if (isPast) { rD = (sP + sR) * tx; sR += rD; } 
+                else if (isToday) { mH = `+ ${formatarMoeda((sP + sR) * tx)} hoje`; } 
+            } 
+            if (isToday && isFds) { mH = "Fim de semana"; } else if (isToday && (sP+sR) === 0) { mH = "Sem depósitos"; } 
+            if ((rD > 0 || dep > 0) && isPast) { hC.unshift({ data: dS, deposito: dep, rendimento: rD, total: sP + sR }); } 
+            else if (dep > 0 && isToday) { hC.unshift({ data: dS, deposito: dep, rendimento: 0, total: sP + sR }); } 
+            
+            dI.setDate(dI.getDate() + 1); 
+        } 
+        return { principal: sP, rendimento: sR, total: sP + sR, historico: hC, msgDia: mH }; 
+    }
+    
+    function abrirModalCaixinha(id = null) { 
+        document.getElementById('edit-meta-id').value = id || ""; 
+        if(id) { 
+            let m = metas.find(x => x.id === id); 
+            document.getElementById('meta-icone').value = m.icone || 'target'; 
+            document.getElementById('meta-nome').value = m.nome; 
+            document.getElementById('meta-alvo').value = m.alvo || ''; 
+        } else { 
+            document.getElementById('meta-icone').value = 'target'; 
+            document.getElementById('meta-nome').value = ''; 
+            document.getElementById('meta-alvo').value = ''; 
+        } 
+        openModal('modal-caixinha'); refreshIcons(); 
+    }
+    
+    function salvarCaixinha() { 
+        const id = document.getElementById('edit-meta-id').value; const ic = document.getElementById('meta-icone').value || 'target'; const nm = document.getElementById('meta-nome').value; const al = parseFloat(document.getElementById('meta-alvo').value) || 0; 
+        if(!nm) return alert("Nome?"); 
+        if (id) { let idx = metas.findIndex(x => x.id === id); metas[idx].nome = nm; metas[idx].icone = ic; metas[idx].alvo = al; } 
+        else { metas.push({ id: 'meta_' + Date.now(), nome: nm, icone: ic, alvo: al }); } 
+        localStorage.setItem('fintrack_v26_metas', JSON.stringify(metas)); window.history.back(); render(); showToast('Salvo!'); 
+    }
+    
+    function excluirCaixinha(id) { 
+        let s = historicosCaixinhasGlobais[id] || {principal: 0};
+        if(s.principal > 0) {
+            alert("Aviso: Resgate o dinheiro desta Caixinha antes de excluí-la."); return;
+        }
+        confirmarAcao("Apagar caixinha?", () => { 
+            metas = metas.filter(x => x.id !== id); 
+            localStorage.setItem('fintrack_v26_metas', JSON.stringify(metas)); 
+            window.history.back(); showToast('Excluída!', 'trash-2', 'var(--danger)'); render();
+        }); 
+    }
+    
+    function abrirDetalhesCaixinha(id) { 
+        let m = metas.find(x => x.id === id); let s = historicosCaixinhasGlobais[id]; 
+        document.getElementById('detalhe-nome').innerText = esc(m.nome); document.getElementById('detalhe-icone').innerHTML = `<i data-lucide="${m.icone || 'trending-up'}" style="width:48px; height:48px;"></i>`; document.getElementById('detalhe-principal').innerText = formatarMoeda(s.principal); document.getElementById('detalhe-rendimento').innerText = "+ " + formatarMoeda(s.rendimento); document.getElementById('detalhe-total').innerText = formatarMoeda(s.total); 
+        const bP = document.getElementById('detalhe-predicao'); 
+        if (m.alvo > 0 && s.principal > 0) { 
+            let mD = new Set(dados.filter(x => x.cat === 'Investimentos' && x.meta === id).map(x => x.mesIso)).size; let med = s.principal / (mD || 1); let fl = m.alvo - s.total; 
+            if (fl > 0 && med > 0) { let mR = Math.ceil(fl / med); let dF = new Date(); dF.setMonth(dF.getMonth() + mR); document.getElementById('predicao-texto').innerText = `${mesesNome[dF.getMonth()]} ${dF.getFullYear()}`; bP.style.display = 'flex'; } 
+            else { bP.style.display = fl <= 0 ? 'flex' : 'none'; if(fl <= 0) document.getElementById('predicao-texto').innerText = "Alcançada! 🎉"; } 
+        } else { bP.style.display = 'none'; } 
+        
+        const lH = document.getElementById('detalhe-lista-historico'); lH.innerHTML = ''; 
+        s.historico.slice(0, 30).forEach(h => { lH.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-color); font-size:0.85rem;"><span>${formatarDataBr(h.data)}${h.deposito > 0 ? '<br><small style="color:var(--text-muted)">Aporte: ' + formatarMoeda(h.deposito) + '</small>' : ''}</span><div style="text-align:right;"><strong style="color:var(--success);" class="blur-val">+ ${formatarMoeda(h.rendimento)}</strong><br><small style="color:var(--text-muted);" class="blur-val">${formatarMoeda(h.total)}</small></div></div>`; }); 
+        document.getElementById('detalhe-acoes').innerHTML = `<button onclick="window.history.back(); setTimeout(() => abrirModalCaixinha('${id}'), 50);" class="quick-btn" style="flex:1; margin-right:10px; border:none; background:rgba(45,212,191,0.1); color:var(--primary);"><i data-lucide="pencil"></i> Editar</button><button onclick="window.history.back(); setTimeout(() => excluirCaixinha('${id}'), 50);" class="quick-btn" style="flex:1; border:none; background:rgba(248,113,113,0.1); color:var(--danger);"><i data-lucide="trash-2"></i> Excluir</button>`; 
+        openModal('modal-detalhes-caixinha'); refreshIcons(); 
+    }
     
     function atualizarSimulador() { 
         const ap = parseFloat(document.getElementById('sim-aporte').value) || 0; 
@@ -1214,7 +1362,7 @@
             if (t.mesIso <= mI) { if (t.cat === 'Receita') { sL += t.valor; } else if (t.formaPgto !== 'cartao' || t.pago === true) { sL -= t.valor; } if(t.formaPgto === 'cartao' && !t.pago && t.cartaoId) { totaisFaturas[t.cartaoId] = (totaisFaturas[t.cartaoId] || 0) + t.valor; } } 
             if (t.mesIso === proxMesIso && t.formaPgto === 'cartao') { faturasFuturas += t.valor; } 
             if (t.mesIso === mI) { lM.push(t); if (t.cat === 'Receita') { eM += t.valor; } else if (t.cat === 'Investimentos') { iM += t.valor; } else { sM += t.valor; if(t.cat === 'Necessidades') nM += t.valor; if(t.cat === 'Desejos') dM += t.valor; if(t.dia <= diasNoMes) gD[t.dia - 1] += t.valor; } } 
-            if(t.cat === 'Necessidades' && t.dataReal && (t.formaPgto !== 'cartao' || t.pago === false)) { let[a, m, d] = t.dataReal.split('-'); let dV = new Date(a, m - 1, d); if(dV >= hj && dV <= lR) { tA = true; let df = Math.ceil((dV - hj) / 86400000); rL.innerHTML += `<div class="radar-item ${df <= 2 ? "danger" : "warning"}"><span>${t.desc} <br><small style="color:var(--text-muted)">${df === 0 ? "HOJE" : "em " + df + " dias"}</small></span><strong class="blur-val">${formatarMoeda(t.valor)}</strong></div>`; } } 
+            if(t.cat === 'Necessidades' && t.dataReal && (t.formaPgto !== 'cartao' || t.pago === false)) { let[a, m, d] = t.dataReal.split('-'); let dV = new Date(a, m - 1, d); if(dV >= hj && dV <= lR) { tA = true; let df = Math.ceil((dV - hj) / 86400000); rL.innerHTML += `<div class="radar-item ${df <= 2 ? "danger" : "warning"}"><span>${esc(t.desc)} <br><small style="color:var(--text-muted)">${df === 0 ? "HOJE" : "em " + df + " dias"}</small></span><strong class="blur-val">${formatarMoeda(t.valor)}</strong></div>`; } } 
         }); 
         
         if(!tA) { rL.innerHTML = `<div class="radar-item safe"><span><i data-lucide="check-circle" style="color:var(--success); width:16px;"></i> Contas sob controle.</span></div>`; } 
@@ -1222,19 +1370,19 @@
         document.getElementById('teto-texto').innerText = `${formatarMoeda(sM)} / ${tetoGastos > 0 ? formatarMoeda(tetoGastos) : 'Livre'}`; document.getElementById('teto-percent').innerText = `${prcTeto.toFixed(0)}%`; document.getElementById('teto-bar').style.width = `${Math.min(prcTeto, 100)}%`; document.getElementById('teto-bar').style.background = prcTeto > 90 ? 'var(--danger)' : (prcTeto > 70 ? 'var(--warning)' : 'var(--success)'); 
         
         const carousel = document.getElementById('carousel-faturas'); carousel.innerHTML = ''; let temFaturaAberta = false; 
-        cartoes.forEach(cartao => { let gastoNoCartao = totaisFaturas[cartao.id] || 0; let temLancamentoNoMes = dados.some(t => t.mesIso === mI && t.formaPgto === 'cartao' && t.cartaoId === cartao.id); if (gastoNoCartao > 0 || temLancamentoNoMes) { temFaturaAberta = true; let pctLimite = cartao.limite > 0 ? (gastoNoCartao / cartao.limite) * 100 : 0; let corBarra = pctLimite > 90 ? 'var(--danger)' : 'var(--success)'; let btnPagar = gastoNoCartao > 0 ? `<button class="btn-pay-fatura" onclick="event.stopPropagation(); pagarFaturaMes('${cartao.id}')">PAGAR</button>` : `<span style="font-size:0.75rem; color: var(--success); font-weight:bold; background: rgba(74,222,128,0.2); padding: 4px 8px; border-radius: 6px; display:flex; align-items:center; gap:4px;"><i data-lucide="check" style="width:12px;"></i> PAGO</span>`; carousel.innerHTML += `<div class="credit-card-box" style="background: ${cartao.cor}; border: 1px solid rgba(255,255,255,0.1); cursor:pointer;" onclick="abrirFaturaCartao('${cartao.id}')"><div class="credit-card-header"><div><div style="font-size: 0.75rem; opacity: 0.9; display:flex; align-items:center; gap:5px;"><i data-lucide="credit-card" style="width:16px;"></i> ${cartao.nome}</div><div class="blur-val" style="font-size: 1.6rem; font-weight: bold; margin-top:2px;">${formatarMoeda(gastoNoCartao)}</div></div>${btnPagar}</div><div><div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.8;"><span>Limite Usado</span><span class="blur-val">${formatarMoeda(gastoNoCartao)} / ${formatarMoeda(cartao.limite)}</span></div><div class="limite-bar-bg"><div class="limite-bar-fill" style="width: ${Math.min(pctLimite, 100)}%; background: ${corBarra};"></div></div></div></div>`; } }); 
+        cartoes.forEach(cartao => { let gastoNoCartao = totaisFaturas[cartao.id] || 0; let temLancamentoNoMes = dados.some(t => t.mesIso === mI && t.formaPgto === 'cartao' && t.cartaoId === cartao.id); if (gastoNoCartao > 0 || temLancamentoNoMes) { temFaturaAberta = true; let pctLimite = cartao.limite > 0 ? (gastoNoCartao / cartao.limite) * 100 : 0; let corBarra = pctLimite > 90 ? 'var(--danger)' : 'var(--success)'; let btnPagar = gastoNoCartao > 0 ? `<button class="btn-pay-fatura" onclick="event.stopPropagation(); pagarFaturaMes('${cartao.id}')">PAGAR</button>` : `<span style="font-size:0.75rem; color: var(--success); font-weight:bold; background: rgba(74,222,128,0.2); padding: 4px 8px; border-radius: 6px; display:flex; align-items:center; gap:4px;"><i data-lucide="check" style="width:12px;"></i> PAGO</span>`; carousel.innerHTML += `<div class="credit-card-box" style="background: ${cartao.cor}; border: 1px solid rgba(255,255,255,0.1); cursor:pointer;" onclick="abrirFaturaCartao('${cartao.id}')"><div class="credit-card-header"><div><div style="font-size: 0.75rem; opacity: 0.9; display:flex; align-items:center; gap:5px;"><i data-lucide="credit-card" style="width:16px;"></i> ${esc(cartao.nome)}</div><div class="blur-val" style="font-size: 1.6rem; font-weight: bold; margin-top:2px;">${formatarMoeda(gastoNoCartao)}</div></div>${btnPagar}</div><div><div style="display:flex; justify-content:space-between; font-size:0.7rem; opacity:0.8;"><span>Limite Usado</span><span class="blur-val">${formatarMoeda(gastoNoCartao)} / ${formatarMoeda(cartao.limite)}</span></div><div class="limite-bar-bg"><div class="limite-bar-fill" style="width: ${Math.min(pctLimite, 100)}%; background: ${corBarra};"></div></div></div></div>`; } }); 
         carousel.style.display = temFaturaAberta ? 'flex' : 'none'; 
         
         let bC = checkBateuMetaGlobal(mI); let tG = dados.filter(x => x.cat === 'Investimentos' && x.mesIso <= mI).reduce((s, t) => s + t.valor, 0); 
         document.getElementById('cdi-alert-box').className = bC ? "cdi-alert success" : "cdi-alert"; document.getElementById('cdi-title').innerHTML = bC ? `<i data-lucide="rocket" style="width:16px;"></i> Bônus 115% Ativo!` : `<i data-lucide="rocket" style="width:16px;"></i> Acelere!`; document.getElementById('cdi-desc').innerHTML = bC ? "Seu dinheiro está rendendo o máximo." : `Faltam <span class="blur-val">${formatarMoeda(1000 - tG)}</span> para 115% do CDI.`; document.getElementById('cdi-bar').style.width = `${Math.min((tG / 1000) * 100, 100)}%`; 
         
-        metas.forEach(m => { let sim = simularEvolucaoCaixinha(m.id); historicosCaixinhasGlobais[m.id] = sim; let pg = m.alvo > 0 ? Math.min((sim.total / m.alvo) * 100, 100) : 100; lX.innerHTML += `<div class="goal-item" onclick="abrirDetalhesCaixinha('${m.id}')"><div class="goal-info"><div><strong style="font-size:1rem; display:flex; align-items:center; gap:5px;"><i data-lucide="${m.icone || 'trending-up'}" style="width:18px;"></i> ${m.nome}</strong><small class="blur-val" style="color:var(--success); font-weight:bold; margin-top:3px; display:block;">${sim.msgDia}</small></div><div style="text-align:right;"><strong style="font-size:1.1rem; color:var(--primary);" class="blur-val">${formatarMoeda(sim.total)}</strong><br><small style="color:var(--text-muted);" class="blur-val">${m.alvo ? "Meta: "+formatarMoeda(m.alvo) : "Sem teto"}</small></div></div><div class="progress-bg"><div class="progress-fill" style="width: ${pg}%; background: var(--primary);"></div></div></div>`; }); 
+        metas.forEach(m => { let sim = simularEvolucaoCaixinha(m.id); historicosCaixinhasGlobais[m.id] = sim; let pg = m.alvo > 0 ? Math.min((sim.total / m.alvo) * 100, 100) : 100; lX.innerHTML += `<div class="goal-item" onclick="abrirDetalhesCaixinha('${m.id}')"><div class="goal-info"><div><strong style="font-size:1rem; display:flex; align-items:center; gap:5px;"><i data-lucide="${m.icone || 'trending-up'}" style="width:18px;"></i> ${esc(m.nome)}</strong><small class="blur-val" style="color:var(--success); font-weight:bold; margin-top:3px; display:block;">${sim.msgDia}</small></div><div style="text-align:right;"><strong style="font-size:1.1rem; color:var(--primary);" class="blur-val">${formatarMoeda(sim.total)}</strong><br><small style="color:var(--text-muted);" class="blur-val">${m.alvo ? "Meta: "+formatarMoeda(m.alvo) : "Sem teto"}</small></div></div><div class="progress-bg"><div class="progress-fill" style="width: ${pg}%; background: var(--primary);"></div></div></div>`; }); 
         
         // EXTRATO LISTA
         let lF = lM; if(filtroAtual === 'Receita') lF = lM.filter(x => x.cat === 'Receita'); else if(filtroAtual === 'Saida') lF = lM.filter(x => x.cat !== 'Receita'); else if(filtroAtual === 'Cartao') lF = lM.filter(x => x.formaPgto === 'cartao'); 
         document.getElementById('total-registros').innerText = `(${lF.length})`; 
         if(!window.limiteExtratoGeral) window.limiteExtratoGeral = 7; let lF_render = lF.slice().reverse(); let showMoreExtrato = lF_render.length > window.limiteExtratoGeral;
-        lF_render.slice(0, window.limiteExtratoGeral).forEach(t => { let cN = t.formaPgto === 'cartao' ? (cartoes.find(c => c.id === t.cartaoId)||{}).nome || 'Cartão' : ''; let fp = t.formaPgto === 'cartao' ? ` • ${cN}${t.pago ? ' (Pago)' : ''}` : ''; let tagSub = t.subcat ? ` • <span style="background:var(--input-bg); padding: 2px 6px; border-radius: 4px;">${t.subcat}</span>` : ''; lC.innerHTML += `<div class="trans-item"><div class="icon"><i data-lucide="${getIcon(t.desc, t.cat, t.meta, t.subcat)}"></i></div><div class="info"><strong>${t.desc}</strong><small>${formatarDataBr(t.dataReal)}${tagSub}${fp}</small></div><div class="amount-col"><span class="amount blur-val" style="color:${t.cat === 'Receita' ? 'var(--success)' : 'var(--danger)'}">${t.cat === 'Receita' ? '+' : '-'} ${formatarMoeda(t.valor)}</span><div class="actions"><button class="btn-action" onclick="abrirModalTransacao(${t.id})"><i data-lucide="pencil"></i></button><button class="btn-action" onclick="excluir(${t.id})"><i data-lucide="trash-2"></i></button></div></div></div>`; }); 
+        lF_render.slice(0, window.limiteExtratoGeral).forEach(t => { let cN = t.formaPgto === 'cartao' ? (cartoes.find(c => c.id === t.cartaoId)||{}).nome || 'Cartão' : ''; let fp = t.formaPgto === 'cartao' ? ` • ${esc(cN)}${t.pago ? ' (Pago)' : ''}` : ''; let tagSub = t.subcat ? ` • <span style="background:var(--input-bg); padding: 2px 6px; border-radius: 4px;">${esc(t.subcat)}</span>` : ''; lC.innerHTML += `<div class="trans-item"><div class="icon"><i data-lucide="${getIcon(t.desc, t.cat, t.meta, t.subcat)}"></i></div><div class="info"><strong>${esc(t.desc)}</strong><small>${formatarDataBr(t.dataReal)}${tagSub}${fp}</small></div><div class="amount-col"><span class="amount blur-val" style="color:${t.cat === 'Receita' ? 'var(--success)' : 'var(--danger)'}">${t.cat === 'Receita' ? '+' : '-'} ${formatarMoeda(t.valor)}</span><div class="actions"><button class="btn-action" onclick="abrirModalTransacao(${t.id})"><i data-lucide="pencil"></i></button><button class="btn-action" onclick="excluir(${t.id})"><i data-lucide="trash-2"></i></button></div></div></div>`; }); 
         if (showMoreExtrato) { lC.innerHTML += `<div style="text-align: center; margin-top: 15px; margin-bottom: 20px;"><button onclick="window.limiteExtratoGeral += 20; render();" class="chip-btn" style="width: 100%; border-style: dashed;">Ver extrato completo...</button></div>`; }
         if(!lF.length) { lC.innerHTML = "<small style='color:var(--text-muted);'>Nenhum lançamento no mês.</small>"; } 
         
@@ -1250,7 +1398,7 @@
         
         const habitsBox = document.getElementById('habits-list'); habitsBox.innerHTML = ''; let cats = { "Delivery & iFood": 0, "Transporte App": 0, "Café Diário": 0, "Assinaturas": 0 }; lM.forEach(t => { if(t.cat === 'Receita' || t.cat === 'Investimentos') return; let s = (t.desc + " " + (t.subcat || "")).toLowerCase(); if(/ifood|pizza|burger|lanche|delivery/i.test(s)) cats["Delivery & iFood"] += t.valor; if(/uber|99|indriver|taxi/i.test(s)) cats["Transporte App"] += t.valor; if(/caf[eé]|starbucks/i.test(s)) cats["Café Diário"] += t.valor; if(/netflix|spotify|amazon|hbo|assinatura/i.test(s)) cats["Assinaturas"] += t.valor; }); for(let k in cats) { if(cats[k] > 0) { habitsBox.innerHTML += `<div class="habits-item"><span>${k}</span><strong class="blur-val">${formatarMoeda(cats[k])}</strong></div>`; } } if(habitsBox.innerHTML === '') { habitsBox.innerHTML = "<small style='color:var(--text-muted);'>Nenhum vazamento invisível detectado.</small>"; } 
         
-        const topBox = document.getElementById('top-gastos-list'); topBox.innerHTML = ''; Object.keys(tGrl).map(k => ({n: k, v: tGrl[k]})).sort((a,b) => b.v - a.v).slice(0,4).forEach((x, i) => { let r = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '▪️'; topBox.innerHTML += `<div class="habits-item" style="border:none"><span>${r} ${x.n}</span><strong class="blur-val">${formatarMoeda(x.v)}</strong></div>`; }); 
+        const topBox = document.getElementById('top-gastos-list'); topBox.innerHTML = ''; Object.keys(tGrl).map(k => ({n: esc(k), v: tGrl[k]})).sort((a,b) => b.v - a.v).slice(0,4).forEach((x, i) => { let r = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '▪️'; topBox.innerHTML += `<div class="habits-item" style="border:none"><span>${r} ${x.n}</span><strong class="blur-val">${formatarMoeda(x.v)}</strong></div>`; }); 
         
         updateCharts(nM, dM, iM, gD, diasNoMes); refreshIcons(); 
     }
@@ -1262,7 +1410,9 @@
     contentArea.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, {passive: true});
     contentArea.addEventListener('touchend', e => { let touchEndX = e.changedTouches[0].screenX; let touchEndY = e.changedTouches[0].screenY; let deltaX = touchEndX - touchStartX; let deltaY = touchEndY - touchStartY; if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) { let currentActive = document.querySelector('.view.active'); if(!currentActive) return; let currentId = currentActive.id.replace('view-', ''); let currentIndex = viewsList.indexOf(currentId); let nextIndex = currentIndex; if (deltaX < 0 && currentIndex < viewsList.length - 1) { nextIndex++; } else if (deltaX > 0 && currentIndex > 0) { nextIndex--; } if (nextIndex !== currentIndex) { let nextTab = document.querySelectorAll('.nav-tabs .tab')[nextIndex]; mudarAba(viewsList[nextIndex], nextTab); } } }, {passive: true});
 
+    setupHistoryTrap(); // Inicia a armadilha do botão Voltar
     render();
+    atualizarSimulador(); // Inicia simulador para não ficar zerado (Bug 4.2)
 </script>
 </body>
 </html>
